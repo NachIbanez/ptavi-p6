@@ -18,7 +18,8 @@ class EchoHandler(socketserver.DatagramRequestHandler):
         while 1:
             # Leyendo línea a línea lo que nos envía el cliente
             line = self.rfile.read()
-            print("El cliente nos manda " + line.decode('utf-8'))
+            if line[:line.find(" ")] == "INVITE":
+                print("El cliente nos manda " + line.decode('utf-8'))
 
             # Si no hay más líneas salimos del bucle infinito
             if not line:
