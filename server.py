@@ -26,20 +26,21 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                 if not "@" in line or not ":" in line:
                     self.wfile.write(b'SIP/2.0 400 Bad Request')
                 else:
-                    self.wfile.write(b'SIP/2.0 100 Trying\r\n\r\n'
-                                     b'SIP/2.0 180 Ringing\r\n\r\n'
-                                     b'SIP/2.0 200 OK\r\n\r\n')
+                    self.wfile.write(b'SIP/2.0 100 Trying\r\n'
+                                     b'SIP/2.0 180 Ringing\r\n'
+                                     b'SIP/2.0 200 OK\r\n')
             elif method == "ACK":
-                aEjecutar = './mp32rtp -i ' + IP + ' -p 23032 <' + AUDIO
+                print("El cliente nos manda " + line)
+                aEjecutar = './mp32rtp -i 127.0.0.1 -p 23032 < ' + AUDIO
                 os.system(aEjecutar)
             elif line[:line.find(" ")] == "BYE":
                 print("El cliente nos manda " + line)
                 if not "@" in line or not ":" in line:
-                    self.wfile.write(b'SIP/2.0 400 Bad Request')
+                    self.wfile.write(b'SIP/2.0 400 Bad Request\r\n')
                 else:
-                    self.wfile.write(b'SIP/2.0 200 OK\r\n\r\n')
+                    self.wfile.write(b'SIP/2.0 200 OK\r\n')
             elif line and method != "INVITE" and method != "BYE" and method != "ACK":
-                self.wfile.write(b'SIP/2.0 405 Method Not Allowed')
+                self.wfile.write(b'SIP/2.0 405 Method Not Allowed\r\n')
 
             # Si no hay más líneas salimos del bucle infinito
             if not line:
